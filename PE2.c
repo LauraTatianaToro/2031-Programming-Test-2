@@ -13,10 +13,11 @@ result of committing plagiarism in this assignment.
 
 BY FILLING THE GAPS,YOU ARE SIGNING THE ABOVE STATEMENTS.
 
-Full Name:
-Student Number:
-Course Section:
-eecs user id:
+Full Name: Laura Toro
+Student Number: 216650236
+Course Section: M
+eecs user id: lttoro20
+
 */
 
 #include <stdio.h>
@@ -51,7 +52,7 @@ struct courseInfo
 };
  
  
-struct courseInfo courseArr[SIZE]; // global variable  array of struc
+struct courseInfo courseArr[SIZE]; // global variable  courseArr of struc
      
 
 char prompt_menu(void);
@@ -153,8 +154,32 @@ char prompt_menu(void){
 
 /* display all or specified course */
 void displayCourses(void){   
-;  // the provide PE2.out uses "%s\t%-40s%-5s %s-%s   %s\n" as formatting string for printing each course info
-      
+   char string[80];
+   char a[] = {'a', '\0'};
+ 
+
+  printf("course code (or 'a')? ");
+  fgets(string, 80, stdin);
+  string[strlen(string)-1] = '\0';
+
+ // printf("testing %s, %s \n",  a, string);
+
+/* if(strcmp(string, a ) == 0 ){
+  printf("test");
+} else {
+  printf("test2");
+} */
+
+  if(strcmp(string, a ) == 0 )  {
+    printf("=================================================================================\n");
+    for(int i = 0; i <  21  ; i++){
+      printf("%s\t%-40s%-5s %s-%s   %s\n", courseArr[i].code, courseArr[i].title, courseArr[i].date, courseArr[i].time_start, courseArr[i].time_end, courseArr[i].location);
+    }
+   
+  printf("=================================================================================\n");  // the provide PE2.out uses "%s\t%-40s%-5s %s-%s   %s\n" as formatting string for printing each course info
+  } else {
+    printf("test");
+  }
 }
 
 
@@ -186,7 +211,7 @@ void swap(struct db_type * pArr[]){
 	; 
 } 
 
-/* load from course.txt, store into (global) array of courses  */
+/* load from course.txt, store into (global) courseArr of courses  */
 void init_courseArr(void){ 
  
    FILE *fr; //file pointer
