@@ -156,7 +156,7 @@ char prompt_menu(void){
 void displayCourses(void){   
    char string[80];
    char a[] = {'a', '\0'};
- 
+   int found = 0;
 
   printf("course code (or 'a')? ");
   fgets(string, 80, stdin);
@@ -177,10 +177,40 @@ void displayCourses(void){
     }
    
   printf("=================================================================================\n");  // the provide PE2.out uses "%s\t%-40s%-5s %s-%s   %s\n" as formatting string for printing each course info
+  
+  } else if(strlen(string) < 5) {
+    char *numbersOnly;
+
+    for(int m = 0; m <21; m++){
+      if (numbersOnly = strstr(courseArr[m].code, string)){
+        printf("%s\t%-40s%-5s %s-%s   %s\n", courseArr[m].code, courseArr[m].title, courseArr[m].date, courseArr[m].time_start, courseArr[m].time_end, courseArr[m].location);
+        found = 1;
+        break;
+      } 
+    }
+
+      if (found == 0){
+      printf("error! course does not exist");
+      }
+
+
   } else {
-    printf("test");
-  }
-}
+
+
+    for(int j = 0; j < 21; j++ ){
+      if(strcmp(string, courseArr[j].code ) == 0 ){
+        printf("%s\t%-40s%-5s %s-%s   %s\n", courseArr[j].code, courseArr[j].title, courseArr[j].date, courseArr[j].time_start, courseArr[j].time_end, courseArr[j].location);
+       found = 1;
+       break;
+      }
+    }
+      if (found == 0){
+      printf("error! course does not exist");
+      }
+    }
+
+  } 
+
 
 
 
