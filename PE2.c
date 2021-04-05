@@ -73,6 +73,8 @@ int main(int argc, char *argv[])
     
     struct db_type * db_pArr[SIZE];  // main db storage
 
+
+
     init_list(db_pArr);  // set to NULL
     
     init_courseArr();  // load course from diskfile
@@ -162,12 +164,12 @@ void displayCourses(void){
   fgets(string, 80, stdin);
   string[strlen(string)-1] = '\0';
 
- // printf("testing %s, %s \n",  a, string);
+ // printf("studenting %s, %s \n",  a, string);
 
 /* if(strcmp(string, a ) == 0 ){
-  printf("test");
+  printf("student");
 } else {
-  printf("test2");
+  printf("student2");
 } */
 
   if(strcmp(string, a ) == 0 )  {
@@ -216,10 +218,155 @@ void displayCourses(void){
 
 /* input items into the list */
 void enterNew(struct db_type * pArr[SIZE]){  
-	;
-   
+
+  char name[fieldLength];
+  int age[3];
+  char course1[fieldLength];
+  char course2[fieldLength];
+  char status[fieldLength];
+
+  
+  printf("name: ");
+  fgets(name, fieldLength, stdin);
+  name[strlen(name)-1] = '\0';
+
+  printf("age: ");
+  fgets(age, 3, stdin);
+ 
+  
+
+  printf("course-1: ");
+  fgets(course1, fieldLength, stdin);
+  course1[strlen(course1)-1] = '\0';
+  // printf("%d", isValid(course1));
+
+
+  
+
+  while(isValid(course1) == 0){
+    
+    printf("course does not exist, enter again: ");
+    fgets(course1, fieldLength, stdin);
+      course1[strlen(course1)-1] = '\0';
+    
+    } 
+  
+    char compareStartTime1[20];
+    char compareEndTime1[20];
+
+      for(int i =0; i <21; i ++){
+      if( (strcmp(course1, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course1)) ){
+      strcpy(compareStartTime1, courseArr[i].time_start);
+      strcpy(compareEndTime1, courseArr[i].time_end);
+      // printf("test compare 1\n");
+      break;
+      
+    }
+   }
+
+  
+//helper function used to check
+//for int i = 0; i++
+//if course1 == courses[i].code
+//isValid == 0;
+//if isValid == 0
+//printf("try again");
+//fgets(course1, fieldLength, stdin);
+
+  printf("course-2: ");
+  fgets(course2, fieldLength, stdin);
+  course2[strlen(course2)-1] = '\0';
+
+
+  while(isValid(course2) == 0){
+    
+    printf("course does not exist, enter again: ");
+    fgets(course2, fieldLength, stdin);
+      course2[strlen(course2)-1] = '\0';
+    
+    } 
+
+    char compareStartTime2[20];
+    char compareEndTime2[20];
+
+      for(int i =0; i <21; i ++){
+      if( (strcmp(course2, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course2)) ){
+      strcpy(compareStartTime2, courseArr[i].time_start);
+      strcpy(compareEndTime2, courseArr[i].time_end);
+      // printf("test compare\n");
+      break;
+      
+    }
+   }
+  
+
+
+  // loop check if array at i is empty then add
+  //new element 
+
+struct db_type student[SIZE];
+strcpy(student->name, name);
+student->age = age;
+strcpy(student->course1, course1);
+strcpy(student->course2, course2);
+
+
+//compare times overlapping
+ if(compareStartTime1 <= compareEndTime2 && compareEndTime1 >= compareStartTime2){
+  strcpy(student->status, "ATTENTION! time conflict");
+
+  printf("ATTENTION! time conflict");
+} else {
+  strcpy(student->status, "SUCCESSFUL! no time conflict");
+  printf("SUCCESSFUL! no time conflict");
+
+} 
+
+
+int counter; 
+for(counter = 0; counter < SIZE; counter++){
+  if(pArr[counter] == NULL){
+    // printf("test\n");
+    pArr[counter] = student;
+    
+     //printf("%s\n", pArr[counter]->status);
+
+    
+    // printf("%d\n", pArr[counter]->age);
+
+    
+    // printf("%s\n",pArr[counter]->course1);
+
+    
+    // printf("%s\n", pArr[counter]->course2);
+    break;
+  }
+} 
+
+
+
+
+
+
+// printf("reached end");
 
 }
+
+ int isValid(char course[fieldLength]){
+   int isValid = 0;
+   // char *numbersOnly;
+   for(int i =0; i <21; i ++){
+      if( (strcmp(course, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course))){
+      isValid = 1;
+      break;
+      
+    }
+   }
+  return isValid;
+} 
+   
+
+
 
 /* display records */
 void displayDB(struct db_type * pArr[]){
