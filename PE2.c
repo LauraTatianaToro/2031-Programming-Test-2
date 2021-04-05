@@ -28,6 +28,7 @@ eecs user id: lttoro20
 #define SIZE 30
 #define fieldLength 200
 
+int studentCount =0;
 
 #define diskFile "diskFile.dat"
 #define courseFile "course.txt"
@@ -53,7 +54,8 @@ struct courseInfo
  
  
 struct courseInfo courseArr[SIZE]; // global variable  courseArr of struc
-     
+
+
 
 char prompt_menu(void);
 void init_list(struct db_type * pArr[]); 
@@ -113,6 +115,7 @@ void init_list(struct db_type * pArr[]){
 }
 
 void clearDB(struct db_type * pArr[]){
+  studentCount = 0;
    char c3[3];
    printf("are you sure to clear db? (y) or (n)? ");
  
@@ -180,7 +183,7 @@ void displayCourses(void){
    
   printf("=================================================================================\n");  // the provide PE2.out uses "%s\t%-40s%-5s %s-%s   %s\n" as formatting string for printing each course info
   
-  } else if(strlen(string) < 5) {
+  } else if(strlen(string) < 5 && strlen(string) > 3) {
     char *numbersOnly;
 
     for(int m = 0; m <21; m++){
@@ -219,8 +222,10 @@ void displayCourses(void){
 /* input items into the list */
 void enterNew(struct db_type * pArr[SIZE]){  
 
+  
+
   char name[fieldLength];
-  int age[3];
+  int age;
   char course1[fieldLength];
   char course2[fieldLength];
   char status[fieldLength];
@@ -231,7 +236,7 @@ void enterNew(struct db_type * pArr[SIZE]){
   name[strlen(name)-1] = '\0';
 
   printf("age: ");
-  fgets(age, 3, stdin);
+  scanf("%d%*c", &age);
  
   
 
@@ -243,7 +248,7 @@ void enterNew(struct db_type * pArr[SIZE]){
 
   
 
-  while(isValid(course1) == 0){
+  while(isValid(course1) == 0 ){
     
     printf("course does not exist, enter again: ");
     fgets(course1, fieldLength, stdin);
@@ -255,7 +260,7 @@ void enterNew(struct db_type * pArr[SIZE]){
     char compareEndTime1[20];
 
       for(int i =0; i <21; i ++){
-      if( (strcmp(course1, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course1)) ){
+      if((strcmp(course1, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course1))){
       strcpy(compareStartTime1, courseArr[i].time_start);
       strcpy(compareEndTime1, courseArr[i].time_end);
       // printf("test compare 1\n");
@@ -278,7 +283,7 @@ void enterNew(struct db_type * pArr[SIZE]){
   course2[strlen(course2)-1] = '\0';
 
 
-  while(isValid(course2) == 0){
+  while(isValid(course2) == 0 ){
     
     printf("course does not exist, enter again: ");
     fgets(course2, fieldLength, stdin);
@@ -305,58 +310,58 @@ void enterNew(struct db_type * pArr[SIZE]){
   //new element 
 
 struct db_type student[SIZE];
-strcpy(student->name, name);
-student->age = age;
-strcpy(student->course1, course1);
-strcpy(student->course2, course2);
+
+
+strcpy(student[studentCount].name, name);
+student[studentCount].age = age;
+strcpy(student[studentCount].course1, course1);
+strcpy(student[studentCount].course2, course2);
+
 
 
 //compare times overlapping
- if(compareStartTime1 <= compareEndTime2 && compareEndTime1 >= compareStartTime2){
-  strcpy(student->status, "ATTENTION! time conflict");
+ if(strcmp(compareStartTime1,compareEndTime2  ) <= 0 &&  strcmp(compareStartTime2, compareEndTime1 ) <= 1 ){
+  strcpy(student[studentCount].status, "ATTENTION! time conflict");
 
-  printf("ATTENTION! time conflict");
+  printf("ATTENTION! time conflict\n");
 } else {
-  strcpy(student->status, "SUCCESSFUL! no time conflict");
-  printf("SUCCESSFUL! no time conflict");
+  strcpy(student[studentCount].status, "SUCCESSFUL! no time conflict");
+  printf("SUCCESSFUL! no time conflict \n");
 
 } 
 
+
+ 
 
 int counter; 
-for(counter = 0; counter < SIZE; counter++){
-  if(pArr[counter] == NULL){
-    // printf("test\n");
-    pArr[counter] = student;
-    
-     //printf("%s\n", pArr[counter]->status);
+for(counter = 0; counter <= SIZE; counter++){
 
+  if(*(pArr + counter) == NULL){
+   *(pArr + counter) = &student[counter];
+   studentCount++;
+   
+   // printf("%d", studentCount);
+     
+     break;
     
-    // printf("%d\n", pArr[counter]->age);
-
-    
-    // printf("%s\n",pArr[counter]->course1);
-
-    
-    // printf("%s\n", pArr[counter]->course2);
-    break;
   }
-} 
+
+   
+}
 
 
-
-
-
-
-// printf("reached end");
 
 }
+
+
+
+
 
  int isValid(char course[fieldLength]){
    int isValid = 0;
    // char *numbersOnly;
    for(int i =0; i <21; i ++){
-      if( (strcmp(course, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course))){
+      if( (strcmp(course, courseArr[i].code ) == 0) || /* numbersOnly = */  (strstr(courseArr[i].code, course)) && strlen(course) < 5 && strlen(course) > 3){
       isValid = 1;
       break;
       
@@ -370,23 +375,121 @@ for(counter = 0; counter < SIZE; counter++){
 
 /* display records */
 void displayDB(struct db_type * pArr[]){
-  ;
- 
+
+char course1Finder[fieldLength];
+char course2Finder[fieldLength];
+char course1[fieldLength];
+char course2[fieldLength];
+
+
+  printf("===============================\n");
+int counter2;
+for(counter2 = 0; counter2 < studentCount; ++counter2){
+
+  if(*(pArr+ counter2) != NULL){
+    printf("name: %s\n", pArr[counter2]->name);
+    printf("age: %d\n", pArr[counter2]->age);
+    //printf("course 1: %s\n", pArr[counter2]->course1);
+    strcpy(course1, pArr[counter2]->course1);
+    strcpy(course2, pArr[counter2]->course2);
+    
+      for(int i =0; i <21; i ++){
+      if( (strcmp(course1, courseArr[i].code ) == 0) ||  (strstr(courseArr[i].code, course1)) ){
+      printf("course1: %s\t%-40s%-5s %s-%s   %s\n", courseArr[i].code, courseArr[i].title, courseArr[i].date, courseArr[i].time_start, courseArr[i].time_end, courseArr[i].location);
+      //printf("test course finder\n");
+      break;
+      
+       }
+      } 
+
+      for(int i =0; i <21; i ++){
+      if( (strcmp(course2, courseArr[i].code ) == 0) ||  (strstr(courseArr[i].code, course2)) ){
+      printf("course2: %s\t%-40s%-5s %s-%s   %s\n", courseArr[i].code, courseArr[i].title, courseArr[i].date, courseArr[i].time_start, courseArr[i].time_end, courseArr[i].location);
+     // printf("test course finder course 2\n");
+      break;
+      
+       }
+      }
+
+   // printf("%s\t%-40s%-5s %s-%s   %s\n", pArr[counter].code, pArr[counter].title, pArr[counter].date, pArr[counter].time_start, pArr[counter].time_end, pArr[counter].location);
+   // printf("%s\t%-40s%-5s %s-%s   %s\n", pArr[counter].code, pArr[counter].title, pArr[counter].date, pArr[counter].time_start, pArr[counter].time_end, pArr[counter].location);
+    printf("remarks: %s\n\n", pArr[counter2]->status);
+    
+
+   } else { 
+     
+printf("========== 0 records ==========\n");
+    break;
+
+
+  }
 }
+
+printf("========== %d records ==========", studentCount);
+ 
+  
+}
+ 
 
 
 /* remove an existing item */
 void removeRecord (struct db_type * pArr[])	
 {
-  ;
+
+char removeStudent[80];
+char name[80];
+
+printf("enter full name to remove:");
+ fgets(removeStudent, 80, stdin);
+  removeStudent[strlen(removeStudent)-1] = '\0';
+
+//printf("%s\n", removeStudent);
+
+int t;
+  for (t=0; t<studentCount; t++){ 
+    if(strcmp(removeStudent, pArr[t]->name ) == 0 && pArr[t]!=0) {
+    pArr[t] = NULL;
+    studentCount = studentCount -1;
+    printf("record [%s] removed successfully.", removeStudent);
+
+  } else{
+    printf("record not found");
+  }
+}
+
+//printf("record not found", removeStudent);
 
 }
 
 /* swap records */
 void swap(struct db_type * pArr[]){
-   
-	; 
-} 
+ struct db_type* temp = NULL;
+
+ //printf("test");
+if(studentCount % 2 == 0){
+  // printf("Even");
+  for(int i = 0; i < studentCount; i= i+2){
+  temp = pArr[i];
+  pArr[i] = pArr[i+1];
+  pArr[i+1] = temp;
+  }
+
+  
+
+  } else {
+  struct db_type* temp2 = NULL;
+  temp2= pArr[studentCount-1];
+  //printf("test2");
+   for(int i = 0; i < studentCount; i= i+2){
+  temp = pArr[i];
+  pArr[i] = pArr[i+1];
+  pArr[i+1] = temp; 
+  }
+
+  pArr[studentCount-1] = temp2;
+}
+
+}
 
 /* load from course.txt, store into (global) courseArr of courses  */
 void init_courseArr(void){ 
@@ -519,7 +622,16 @@ void loadDisk(struct db_type * pArr[]){
 /* sort the records by ages */
 void sort(struct db_type * pArr[])
 {
- 
+  struct db_type* temp = NULL;
+
+ for (int i = 1; i < studentCount; i++)
+  for (int j = 0; j < studentCount - i; j++) {
+ if (pArr[j]->age > pArr[j + 1]->age) {
+ temp = pArr[j];
+  pArr[j] = pArr[j + 1];
+  pArr[j + 1] = temp;
+ }
+  }
 
 }  
 
